@@ -2,7 +2,7 @@ import numpy as np
 import logging
 from . import explainer as e
 
-def test(dir):
+def test(dir, ind):
     from sklearn import datasets
     x = datasets.load_boston()
     data = x.data
@@ -12,4 +12,4 @@ def test(dir):
 
     exp = e.Explainer(clf, x.feature_names)
 
-    print(exp.explain(observation=data[111,:], data=data, direction=dir, baseline=0))
+    print(exp.explain(observation=data[ind,:], data=data, direction=dir, baseline=0))

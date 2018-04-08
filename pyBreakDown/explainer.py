@@ -56,7 +56,7 @@ class Explainer:
             yhats_diff = np.repeat(-float('inf'), data.shape[1])
             
             for variable in open_variables:
-                tmp_data = data
+                tmp_data = np.copy(data)
                 tmp_data[:,variable] = new_data[:,variable]
                 yhats[variable] = self.clf.predict(tmp_data)
                 yhats_diff[variable] = abs(baseline_yhat - np.mean(yhats[variable]))
@@ -67,6 +67,8 @@ class Explainer:
             data[:,amax] = new_data[:,amax]
             open_variables.remove(amax)
 
+
+        print("IMPORTANT_VARIABLES: "+str(important_variables))
         var_names = np.array(self.colnames)[important_variables]
         var_values = observation[0,important_variables]
         means = deque([np.array(v).mean() for k, v in important_yhats.items()])
@@ -93,7 +95,7 @@ class Explainer:
             yhats_diff = np.repeat(float('inf'), data.shape[1])
             
             for variable in open_variables:
-                tmp_data = new_data
+                tmp_data = np.copy(new_data)
                 tmp_data[:,variable] = data[:,variable]
                 yhats[variable] = self.clf.predict(tmp_data)
                 yhats_diff[variable] = abs(target_yhat - np.mean(yhats[variable]))
@@ -104,11 +106,13 @@ class Explainer:
             new_data[:,amin] = data[:,amin]
             open_variables.remove(amin)
 
+        print("IMPORTANT_VARIABLES: "+str(important_variables))
         important_variables.reverse()
+        print("IMPORTANT_VARIABLER: "+str(important_variables))
         var_names = np.array(self.colnames)[important_variables]
         var_values = observation[0,important_variables]
         means = deque([np.array(v).mean() for k, v in important_yhats.items()])
-        means.append(target_yhat)
+        means.appendleft(target_yhat[0])
         means.reverse()
         contributions = np.diff(means)
         return np.transpose(np.array([var_names, var_values, contributions]))
