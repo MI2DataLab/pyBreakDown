@@ -1,5 +1,4 @@
 import numpy as np
-import logging
 from . import explainer as e
 
 def test(dir, ind):
