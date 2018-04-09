@@ -67,8 +67,6 @@ class Explainer:
             data[:,amax] = new_data[:,amax]
             open_variables.remove(amax)
 
-
-        print("IMPORTANT_VARIABLES: "+str(important_variables))
         var_names = np.array(self.colnames)[important_variables]
         var_values = observation[0,important_variables]
         means = deque([np.array(v).mean() for k, v in important_yhats.items()])
@@ -106,9 +104,7 @@ class Explainer:
             new_data[:,amin] = data[:,amin]
             open_variables.remove(amin)
 
-        print("IMPORTANT_VARIABLES: "+str(important_variables))
         important_variables.reverse()
-        print("IMPORTANT_VARIABLER: "+str(important_variables))
         var_names = np.array(self.colnames)[important_variables]
         var_values = observation[0,important_variables]
         means = deque([np.array(v).mean() for k, v in important_yhats.items()])
