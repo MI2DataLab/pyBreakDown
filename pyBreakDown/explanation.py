@@ -11,20 +11,27 @@ class Explanation:
         self._variable_values = deque(variable_values)
         self._contributions = deque(contributions)
     
-    def text (self, fwidth=15, contwidth=10, cumulwidth = 10):
+    def text (self, fwidth=25, contwidth=15, cumulwidth = 15, digits=2):
         assert len(self._variable_names) == len(self._variable_values)
         assert len(self._variable_names) == len(self._contributions)
         assert len(self._variable_names) == len(self._cumulative)
         feats = [' = '.join([name, str(val)]) for name, val in zip (self._variable_names, self._variable_values)]
         lines = [
             ''.join(
-            [feats[i].ljust(fwidth), self._contributions[i].ljust(contwidth), self._cumulative[i].ljust(cumulwidth)]) 
-            for i in range(0,len(self._contributions))
-            ]
-        print (''.join(["Feature".ljust(fwidth), "Contribution".ljust(contwidth), "Cumulative".ljust(cumulwidth)]))
+            [feats[i].ljust(fwidth), 
+            str(round(self._contributions[i],digits)).ljust(contwidth), 
+            str(round(self._cumulative[i], digits)).ljust(cumulwidth)]
+            ) 
+            for i in range(0,len(self._contributions))]
+        print (''.join(
+            ["Feature".ljust(fwidth), 
+            "Contribution".ljust(contwidth), 
+            "Cumulative".ljust(cumulwidth)]))
         print('\n'.join(lines))
-        print(''.join(['Final prediction'.ljust(fwidth+contwidth), str(self._final_prediction).ljust(cumulwidth)]))
-        print(' = '.join(["Baseline", str(self._baseline)]))
+        print(''.join(
+            ['Final prediction'.ljust(fwidth+contwidth), 
+            str(round(self._final_prediction, digits)).ljust(cumulwidth)]))
+        print(' = '.join(["Baseline", str(round(self._baseline, digits))]))
 
     def add_intercept (self, intercept_contribution):
         self._variable_names.appendleft(self._INTERCEPT_NAME)

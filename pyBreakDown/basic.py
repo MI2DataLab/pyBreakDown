@@ -12,4 +12,5 @@ def test(dir, ind):
 
     exp = e.Explainer(clf, x.feature_names)
 
-    print(exp.explain(observation=data[ind,:], data=data, direction=dir, baseline=0))
+    a = exp.explain(observation=data[ind,:], data=data, direction=dir, baseline=0)
+    a.text()

@@ -1,7 +1,7 @@
 import numpy as np
 from collections import deque
 from blist import blist
-from explanation import Explanation
+from . import explanation as e
 
 class Explainer:
     def __init__(self, clf, colnames):
@@ -72,7 +72,7 @@ class Explainer:
         means = self._get_means_from_yhats(important_yhats)
         means.appendleft(baseline_yhat)
         contributions = np.diff(means)
-        return Explanation(var_names, var_values, contributions)
+        return e.Explanation(var_names, var_values, contributions)
 
     def _explain_down (self, observation, baseline, data):
         new_data = self._get_initial_dataset(observation, data)
@@ -106,7 +106,7 @@ class Explainer:
         means.appendleft(target_yhat[0])
         means.reverse()
         contributions = np.diff(means)
-        return Explanation(var_names, var_values, contributions)
+        return e.Explanation(var_names, var_values, contributions)
 
     def _get_means_from_yhats (self, important_yhats):
         return deque([np.array(v).mean() for k,v in important_yhats.items()])
