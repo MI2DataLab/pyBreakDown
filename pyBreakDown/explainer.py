@@ -1,7 +1,7 @@
 import numpy as np
 from collections import deque
 from blist import blist
-from . import explanation
+from explanation import Explanation
 
 class Explainer:
     def __init__(self, clf, colnames):
@@ -18,31 +18,31 @@ class Explainer:
         return np.repeat(observation,repeats=data.shape[0], axis=0)
 
     def explain (self, observation, data, direction, useIntercept = False, baseline=0):
+        assert len(self.colnames) == data.shape[1] #otherwise it wouldnt make any sense
         assert direction in ["up","down"]
-        if direction=="up":
-            results = self._explain_up(observation, baseline, np.copy(data))
-        if direction=="down":
-            results = self._explain_down(observation, baseline, np.copy(data))
+        observation = self._transform_observation(observation) #expand dims from 1D to 2D if necessary
+        assert len(self.colnames) == observation.shape[1]
 
-        meanpred = np.mean(self.clf.predict(data))
+        if direction=="up":
+            exp = self._explain_up(observation, baseline, np.copy(data))
+        if direction=="down":
+            exp = self._explain_down(observation, baseline, np.copy(data))
+
+        mean_prediction = np.mean(self.clf.predict(data))
 
         if useIntercept:
-            baseline = meanpred
+            baseline = mean_prediction
             bcont = 0
         else:
-            bcont = meanpred - baseline
+            bcont = mean_prediction - baseline
         
-        intercept_row = np.expand_dims(np.array(["Intercept", 1, bcont]),axis=0)
-        results = np.concatenate((intercept_row, results),axis=0)
-        return explanation.Explanation(results, baseline)
+        exp.add_intercept(bcont)
+        exp.add_baseline(baseline)
+        exp.make_final_prediction()
+        return exp
 
 
     def _explain_up (self, observation, baseline, data):
-        #go up
-        assert len(self.colnames) == data.shape[1]
-        #todo handle differences between observation and data feature spaces?
-        observation = self._transform_observation(observation)
-        assert observation.shape[1] == data.shape[1]
         new_data = self._get_initial_dataset(observation, data)
 
         baseline_yhat = np.mean(self.clf.predict(data))
@@ -67,21 +67,14 @@ class Explainer:
             data[:,amax] = new_data[:,amax]
             open_variables.remove(amax)
 
-
-        print("IMPORTANT_VARIABLES: "+str(important_variables))
         var_names = np.array(self.colnames)[important_variables]
         var_values = observation[0,important_variables]
-        means = deque([np.array(v).mean() for k, v in important_yhats.items()])
+        means = self._get_means_from_yhats(important_yhats)
         means.appendleft(baseline_yhat)
         contributions = np.diff(means)
-        return np.transpose(np.array([var_names, var_values, contributions]))
-    
+        return Explanation(var_names, var_values, contributions)
+
     def _explain_down (self, observation, baseline, data):
-        #go down
-        assert len(self.colnames) == data.shape[1]
-        #todo handle differences between observation and data feature spaces?
-        observation = self._transform_observation(observation)
-        assert observation.shape[1] == data.shape[1]
         new_data = self._get_initial_dataset(observation, data)
 
         target_yhat = self.clf.predict(observation)
@@ -106,13 +99,14 @@ class Explainer:
             new_data[:,amin] = data[:,amin]
             open_variables.remove(amin)
 
-        print("IMPORTANT_VARIABLES: "+str(important_variables))
         important_variables.reverse()
-        print("IMPORTANT_VARIABLER: "+str(important_variables))
         var_names = np.array(self.colnames)[important_variables]
         var_values = observation[0,important_variables]
-        means = deque([np.array(v).mean() for k, v in important_yhats.items()])
+        means = self._get_means_from_yhats(important_yhats)
         means.appendleft(target_yhat[0])
         means.reverse()
         contributions = np.diff(means)
-        return np.transpose(np.array([var_names, var_values, contributions]))
+        return Explanation(var_names, var_values, contributions)
+
+    def _get_means_from_yhats (self, important_yhats):
+        return deque([np.array(v).mean() for k,v in important_yhats.items()])
