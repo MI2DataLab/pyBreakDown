@@ -8,15 +8,10 @@ class Explanation:
     _INTERCEPT_NAME = "Intercept"
     _INTERCEPT_VALUE = 1
 
-    def __init__ (self):
-        self._variable_names = deque()
-        self._variable_values = deque()
-        self._contributions = deque()
-
-    def add_results(self, variable_names, variable_values, contributions):
-        self._variable_names.append(variable_names)
-        self._variable_values.append(variable_values)
-        self._contributions.append(contributions)
+    def __init__ (self, variable_names, variable_values, contributions):
+        self._variable_names = deque(variable_names)
+        self._variable_values = deque(variable_values)
+        self._contributions = deque(contributions)
     
     def text (self, fwidth=25, contwidth=20, cumulwidth = 20, digits=2):
         """
@@ -61,6 +56,9 @@ class Explanation:
             ['Final prediction'.ljust(fwidth+contwidth), 
             str(round(self._final_prediction, digits)).ljust(cumulwidth)]))
         print(' = '.join(["Baseline", str(round(self._baseline, digits))]))
+
+    def visualize(self):
+        pass
 
     def add_intercept (self, intercept_contribution):
         self._variable_names.appendleft(self._INTERCEPT_NAME)

@@ -9,7 +9,7 @@ def test(dir, ind):
     clf = tree.DecisionTreeRegressor()
     clf.fit(data, x.target)
 
-    exp = e.Explainer(clf, x.feature_names)
+    exp = e.Explainer(clf, data, x.feature_names)
 
-    a = exp.explain(observation=data[ind,:], data=data, direction=dir, baseline=0)
+    a = exp.explain(observation=data[ind,:], direction=dir, baseline=0)
     a.text()

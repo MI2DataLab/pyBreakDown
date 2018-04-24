@@ -7,11 +7,20 @@ class Explainer:
     """
     Explainer object.
 
-    Requires sklearn model and feature names at initialization.
+    Parameters
+    ----------
+        clf : np.array
+            Sklearn predicition model (regression or classification).
+        data : np.array
+            Baseline dataset for algorithm.
+        colnames : np.array
+            Dataset feature names.
     """
-    def __init__(self, clf, colnames):
-        self.colnames = colnames
+    def __init__(self, clf, data, colnames):
+        assert len(colnames) == data.shape[1] #otherwise it wouldnt make any sense
         self.clf = clf
+        self.data = data
+        self.colnames = colnames
 
     def _transform_observation (self, observation):
         if observation.ndim < 2:
@@ -22,7 +31,7 @@ class Explainer:
         assert observation.ndim == 2 and observation.shape[0] == 1
         return np.repeat(observation,repeats=data.shape[0], axis=0)
 
-    def explain (self, observation, data, direction, useIntercept = False, baseline=0):
+    def explain (self, observation, direction, useIntercept = False, baseline=0):
         """
         Make explanation for given observation and dataset.
 
@@ -32,8 +41,6 @@ class Explainer:
         ----------
         observation : np.array
             Observation to explain.
-        data : np.array
-            Baseline dataset for algorithm.
         direction : str
             Could be "up" or "down". Decides the direction of algorithm.
         useIntercept : bool
@@ -47,15 +54,15 @@ class Explainer:
             Object that contains influences and descriptions of each relevant attribute.
 
         """
-        assert len(self.colnames) == data.shape[1] #otherwise it wouldnt make any sense
+        data = np.copy(self.data)
         assert direction in ["up","down"]
         observation = self._transform_observation(observation) #expand dims from 1D to 2D if necessary
         assert len(self.colnames) == observation.shape[1]
 
         if direction=="up":
-            exp = self._explain_up(observation, baseline, np.copy(data))
+            exp = self._explain_up(observation, baseline, data)
         if direction=="down":
-            exp = self._explain_down(observation, baseline, np.copy(data))
+            exp = self._explain_down(observation, baseline, data)
 
         mean_prediction = np.mean(self.clf.predict(data))
 
@@ -135,6 +142,7 @@ class Explainer:
         means.appendleft(target_yhat[0])
         means.reverse()
         contributions = np.diff(means)
+        
         return e.Explanation(var_names, var_values, contributions)
 
     def _get_means_from_yhats (self, important_yhats):
