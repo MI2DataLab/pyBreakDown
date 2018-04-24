@@ -1,9 +1,14 @@
 import numpy as np
 from collections import deque
 from blist import blist
-from . import explanation as e
+from pyBreakDown import explanation as e
 
 class Explainer:
+    """
+    Explainer object.
+
+    Requires sklearn model and feature names at initialization.
+    """
     def __init__(self, clf, colnames):
         self.colnames = colnames
         self.clf = clf
@@ -18,6 +23,30 @@ class Explainer:
         return np.repeat(observation,repeats=data.shape[0], axis=0)
 
     def explain (self, observation, data, direction, useIntercept = False, baseline=0):
+        """
+        Make explanation for given observation and dataset.
+
+        Method works with any sklearn prediction model
+
+        Parameters
+        ----------
+        observation : np.array
+            Observation to explain.
+        data : np.array
+            Baseline dataset for algorithm.
+        direction : str
+            Could be "up" or "down". Decides the direction of algorithm.
+        useIntercept : bool
+            If set, baseline argument will be ignored and baseline will be set to intercept.
+        baseline : float
+            Baseline of explanation.
+
+        Returns
+        -------
+        Explanation
+            Object that contains influences and descriptions of each relevant attribute.
+
+        """
         assert len(self.colnames) == data.shape[1] #otherwise it wouldnt make any sense
         assert direction in ["up","down"]
         observation = self._transform_observation(observation) #expand dims from 1D to 2D if necessary
