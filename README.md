@@ -3,7 +3,7 @@
 
 Python implementation of breakDown package (https://github.com/pbiecek/breakDown).
 
-Docs: http://pybreakdown.readthedocs.io.
+Docs: https://pybreakdown.readthedocs.io.
 
 Currently under construction, stable alpha version delivery date - June, 2018.
 
