@@ -103,7 +103,7 @@ exp.visualize()
 ```
 
 
-![png](output_18_0.png)
+![png](misc/output_18_0.png)
 
 
 ### Figure can be saved to a file:
@@ -114,7 +114,7 @@ exp.visualize(filename="fig.png",dpi=90)
 ```
 
 
-![png](output_20_0.png)
+![png](misc/output_20_0.png)
 
 
 ### Another method of explanation, using "go down" approach:
@@ -125,7 +125,7 @@ explainer.explain(observation=x.data[123,:], direction="down", baseline=0).visua
 ```
 
 
-![png](output_22_0.png)
+![png](misc/output_22_0.png)
 
 
 ### Use intercept as baseline:
@@ -136,5 +136,5 @@ explainer.explain(observation=x.data[100,:], direction="up", useIntercept=True).
 ```
 
 
-![png](output_24_0.png)
+![png](misc/output_24_0.png)
 
