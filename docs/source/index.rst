@@ -10,14 +10,15 @@ pyBreakDown
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
-.. automodule:: pyBreakDown.explainer
- 
-.. autoclass:: Explainer
-    :members:
+   pybreakdown 
 
-.. automodule:: pyBreakDown.explanation
- 	
-.. autoclass:: Explanation
-    :members:
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
+
