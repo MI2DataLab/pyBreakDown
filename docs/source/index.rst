@@ -6,11 +6,10 @@
 pyBreakDown
 =======================================
 
-
-
 .. toctree::
    :maxdepth: 2
 
+   usermanual
    pybreakdown 
 
 
