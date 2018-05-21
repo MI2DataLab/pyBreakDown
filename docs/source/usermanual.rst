@@ -1,5 +1,5 @@
-pyBreakDown
-===========
+pyBreakDown usage
+=================
 
 Python implementation of breakDown package
 (https://github.com/pbiecek/breakDown).
