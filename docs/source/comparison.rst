@@ -8,16 +8,22 @@ Model-agnostic method (up and down approach) was executed on boston data for reg
 R breakDown test code
 ~~~~~~~~~~~~~~~~~~~~~
 
-Following commands were executed: library(breakDown) library(rpart)
-library(MASS) library(microbenchmark)
+Following commands were executed:
 
-train\_data = MASS::Boston[1:300,] model =
-rpart(medv~.,data=train\_data)
+.. code:: r
 
-**Results for following command**\ 
-microbenchmark(breakDown::broken(model,
-MASS::Boston[400,],train\_data,direction="up",baseline="Intercept"),
-times=100)
+    library(breakDown) 
+    library(rpart)
+    library(MASS) 
+    library(microbenchmark)
+    train_data = MASS::Boston[1:300,] 
+    model = rpart(medv~.,data=train_data)
+
+**Results for following command**
+
+.. code:: r
+
+    microbenchmark(breakDown::broken(model,MASS::Boston[400,],train_data,direction="up",baseline="Intercept"),times=100)
 
 .. code:: ipython3
 
@@ -34,10 +40,11 @@ times=100)
 
     r_results_up_s = list(map((lambda x:x/1000000000.0), r_results_up)) #nanoseconds to seconds (float)
 
-**Results for following command**\ 
-microbenchmark(breakDown::broken(model,
-MASS::Boston[400,],train\_data,direction="down",baseline="Intercept"),
-times=100)
+**Results for following command**
+
+.. code:: r
+
+    microbenchmark(breakDown::broken(model,MASS::Boston[400,],train_data,direction="down",baseline="Intercept"),times=100)
 
 .. code:: ipython3
 
