@@ -1,13 +1,12 @@
-
-Comparison between breakDown and pyBreakDown
----------------------------------------------------------------------------
+Performance comparison between breakDown and pyBreakDown
+========================================================
 
 This document summarizes performance of R package breakDown and python package breakDown on the same data.
 
 Model-agnostic method (up and down approach) was executed on boston data for regression using standard benchmarking libraries from each language.
 
-R breakDown code
-----------------
+R breakDown test code
+~~~~~~~~~~~~~~~~~~~~~
 
 Following commands were executed: library(breakDown) library(rpart)
 library(MASS) library(microbenchmark)
@@ -56,8 +55,8 @@ times=100)
 
     r_results_down_s = list(map((lambda x:x/1000000000.0), r_results_down)) #nanoseconds to seconds (float)
 
-Python pyBreakDown code
------------------------
+Python pyBreakDown test code
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Following code was executed:
 

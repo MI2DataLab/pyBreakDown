@@ -1,14 +1,11 @@
 ================
 pyBreakDown package
 ================
-
-
-
 ----------
 Submodules
 ----------
 pyBreakDown.explanation module
-=============
+==============================
 
 .. automodule:: pyBreakDown.explanation
     :members:
@@ -16,7 +13,7 @@ pyBreakDown.explanation module
     :show-inheritance:
 
 pyBreakDown.explainer module
-=============
+============================
 
 .. automodule:: pyBreakDown.explainer
     :members:
