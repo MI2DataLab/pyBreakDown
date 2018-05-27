@@ -6,8 +6,6 @@ Python implementation of breakDown package (https://github.com/pbiecek/breakDown
 
 Docs: https://pybreakdown.readthedocs.io.
 
-Currently under construction.
-
 ## Requirements
 
 Nothing fancy, just python 3.5.2+ and pip.
