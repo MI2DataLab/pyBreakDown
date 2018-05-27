@@ -10,7 +10,7 @@ R breakDown test code
 
 Following commands were executed:
 
-.. code:: r
+.. code:: ipython3
 
     library(breakDown) 
     library(rpart)
@@ -19,9 +19,9 @@ Following commands were executed:
     train_data = MASS::Boston[1:300,] 
     model = rpart(medv~.,data=train_data)
 
-**Results for following command**
+**Following commands were executed:**
 
-.. code:: r
+.. code:: ipython3
 
     microbenchmark(breakDown::broken(model,MASS::Boston[400,],train_data,direction="up",baseline="Intercept"),times=100)
 
@@ -42,7 +42,7 @@ Following commands were executed:
 
 **Results for following command**
 
-.. code:: r
+.. code:: ipython3
 
     microbenchmark(breakDown::broken(model,MASS::Boston[400,],train_data,direction="down",baseline="Intercept"),times=100)
 
