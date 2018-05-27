@@ -1,142 +1,186 @@
 
+
 # pyBreakDown
 
 Python implementation of breakDown package (https://github.com/pbiecek/breakDown).
 
 Docs: https://pybreakdown.readthedocs.io.
 
-Currently under construction, stable alpha version delivery date - June, 2018.
+Currently under construction.
 
-## Example usage for decision tree regressor
+## Requirements
 
+Nothing fancy, just python 3.5.2+ and pip.
 
-```python
-from pyBreakDown import explainer as e
+## Installation
+
+Install directly from github
+```
+    git clone https://github.com/bondyra/pyBreakDown
+    cd ./pyBreakDown
+    python3 setup.py install
 ```
 
-### Load and prepare data
+## Basic usage
+
+### Load dataset
 
 
 ```python
 from sklearn import datasets
+```
+
+
+```python
 x = datasets.load_boston()
 ```
 
-Train any sklearn model
+
+```python
+data = x.data
+```
+
+
+```python
+feature_names = x.feature_names
+```
+
+
+```python
+y = x.target
+```
+
+### Prepare model
+
+
+```python
+import numpy as np
+```
 
 
 ```python
 from sklearn import tree
-clf = tree.DecisionTreeRegressor()
-clf = clf.fit(x.data, x.target)
 ```
-
-### Create explainer object
 
 
 ```python
-explainer = e.Explainer(clf, x.data, x.feature_names)
+model = tree.DecisionTreeRegressor()
 ```
 
-### Explain using "go up" method:
+### Train model
 
 
 ```python
-exp = explainer.explain(observation=x.data[111,:], direction="up", baseline=0)
+train_data = data[1:300,:]
+train_labels=y[1:300]
 ```
-
-### Show text results:
 
 
 ```python
-exp.text()
+model = model.fit(train_data,y=train_labels)
+```
+
+### Explain predictions on test data
+
+
+```python
+#necessary imports
+from pyBreakDown.explainer import Explainer
+from pyBreakDown.explanation import Explanation
+```
+
+
+```python
+#make explainer object
+exp = Explainer(clf=model, data=train_data, colnames=feature_names)
+```
+
+
+```python
+#make explanation object that contains all information
+explanation = exp.explain(observation=data[302,:],direction="up")
+```
+
+### Text form of explanations
+
+
+```python
+#get information in text form
+explanation.text()
 ```
 
     Feature                  Contribution        Cumulative          
-    Intercept = 1            22.8                22.8                
-    LSTAT = 10.16            1.7                 24.5                
-    RM = 6.715               2.11                26.61               
-    B = 395.59               0.24                26.85               
-    PTRATIO = 17.8           0.05                26.9                
-    ZN = 0.0                 0.0                 26.9                
-    CRIM = 0.10084           0.0                 26.9                
-    INDUS = 10.01            0.0                 26.9                
-    CHAS = 0.0               0.0                 26.9                
-    RAD = 6.0                0.0                 26.9                
-    DIS = 2.6775             -0.17               26.73               
-    AGE = 81.6               -0.38               26.35               
-    TAX = 432.0              -0.98               25.37               
-    NOX = 0.547              -2.3                23.07               
-    Final prediction                             23.07               
+    Intercept = 1            29.1                29.1                
+    RM = 6.495               -1.98               27.12               
+    TAX = 329.0              -0.2                26.92               
+    B = 383.61               -0.12               26.79               
+    CHAS = 0.0               -0.07               26.72               
+    NOX = 0.433              -0.02               26.7                
+    RAD = 7.0                0.0                 26.7                
+    INDUS = 6.09             0.01                26.71               
+    DIS = 5.4917             -0.04               26.66               
+    ZN = 34.0                0.01                26.67               
+    PTRATIO = 16.1           0.04                26.71               
+    AGE = 18.4               0.06                26.77               
+    CRIM = 0.09266           1.33                28.11               
+    LSTAT = 8.67             4.6                 32.71               
+    Final prediction                             32.71               
     Baseline = 0
 
 
-### Text results can be customized:
-
 
 ```python
-exp.text(fwidth=30, contwidth=20, cumulwidth=20, digits=4)
+#customized text form
+explanation.text(fwidth=40, contwidth=40, cumulwidth = 40, digits=4)
 ```
 
-    Feature                       Contribution        Cumulative          
-    Intercept = 1                 22.8                22.8                
-    LSTAT = 10.16                 1.6998              24.4998             
-    RM = 6.715                    2.1085              26.6083             
-    B = 395.59                    0.2413              26.8496             
-    PTRATIO = 17.8                0.0504              26.9                
-    ZN = 0.0                      0.0032              26.9032             
-    CRIM = 0.10084                0.0                 26.9032             
-    INDUS = 10.01                 0.0                 26.9032             
-    CHAS = 0.0                    0.0                 26.9032             
-    RAD = 6.0                     0.0                 26.9032             
-    DIS = 2.6775                  -0.1692             26.734              
-    AGE = 81.6                    -0.3806             26.3534             
-    TAX = 432.0                   -0.9826             25.3708             
-    NOX = 0.547                   -2.3036             23.0672             
-    Final prediction                                  23.0672             
+    Feature                                 Contribution                            Cumulative                              
+    Intercept = 1                           29.1                                    29.1                                    
+    RM = 6.495                              -1.9826                                 27.1174                                 
+    TAX = 329.0                             -0.2                                    26.9174                                 
+    B = 383.61                              -0.1241                                 26.7933                                 
+    CHAS = 0.0                              -0.0686                                 26.7247                                 
+    NOX = 0.433                             -0.0241                                 26.7007                                 
+    RAD = 7.0                               0.0                                     26.7007                                 
+    INDUS = 6.09                            0.0074                                  26.708                                  
+    DIS = 5.4917                            -0.0438                                 26.6642                                 
+    ZN = 34.0                               0.0077                                  26.6719                                 
+    PTRATIO = 16.1                          0.0385                                  26.7104                                 
+    AGE = 18.4                              0.0619                                  26.7722                                 
+    CRIM = 0.09266                          1.3344                                  28.1067                                 
+    LSTAT = 8.67                            4.6037                                  32.7104                                 
+    Final prediction                                                                32.7104                                 
     Baseline = 0
 
 
-### Visualize explanation
+### Visual form of explanations
 
 
 ```python
-exp.visualize()
+explanation.visualize()
 ```
 
 
-![png](misc/output_18_0.png)
+![png](output_22_0.png)
 
-
-### Figure can be saved to a file:
 
 
 ```python
-exp.visualize(filename="fig.png",dpi=90)
+#customize height, width and dpi of plot
+explanation.visualize(figsize=(8,5),dpi=100)
 ```
 
 
-![png](misc/output_20_0.png)
+![png](output_23_0.png)
 
-
-### Another method of explanation, using "go down" approach:
 
 
 ```python
-explainer.explain(observation=x.data[123,:], direction="down", baseline=0).visualize()
+#for different baselines than zero
+explanation = exp.explain(observation=data[302,:],direction="up",useIntercept=True)  # baseline==intercept
+explanation.visualize(figsize=(8,5),dpi=100)
 ```
 
 
-![png](misc/output_22_0.png)
-
-
-### Use intercept as baseline:
-
-
-```python
-explainer.explain(observation=x.data[100,:], direction="up", useIntercept=True).visualize()
-```
-
-
-![png](misc/output_24_0.png)
+![png](output_24_0.png)
 

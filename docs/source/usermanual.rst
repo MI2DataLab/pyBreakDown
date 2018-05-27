@@ -8,14 +8,18 @@ Python implementation of breakDown package
 Introduction
 ------------
 
+Requirements
+------------
+Nothing fancy, just python 3.5.2+ and pip.
+
 Installation
 ------------
 Install directly from github
 ::
 
     git clone https://github.com/bondyra/pyBreakDown
-    cd pyBreakDown
-    pip install .
+    cd ./pyBreakDown
+    python3 setup.py install
 
 ----------------
 Quick user guide
@@ -128,9 +132,6 @@ Figure can be saved to a file:
 .. code:: python
 
     exp.visualize(filename="fig.png",dpi=90)
-
-.. figure:: images/output_20_0.png
-   :alt: png
 
 Another method of explanation, using "go down" approach:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -60,7 +60,7 @@ class Explanation:
             str(round(self._final_prediction, digits)).ljust(cumulwidth)]))
         print(' = '.join(["Baseline", str(round(self._baseline, digits))]))
 
-    def visualize(self, figsize=(14,12), filename=None, dpi=90):
+    def visualize(self, figsize=(7,6), filename=None, dpi=90,fontsize=14):
         """
         Get user friendly visualization of explanation
 
@@ -79,10 +79,10 @@ class Explanation:
             return
 
         fig = plt.figure(figsize=figsize)
-        ax = fig.add_subplot(111,aspect='equal')
-        positions = list(range(len(self._attributes)+1))
-        previous_value = 0
-        for (attr_info, position) in zip(self._attributes, positions):
+        ax = plt.axes()
+        positions = list(range(len(self._attributes)+2))
+        previous_value = self._baseline
+        for (attr_info, position) in zip(self._attributes, positions[1:]):
             cumulative = attr_info.cumulative+self._baseline
             height=1
             left = previous_value if attr_info.contribution > 0 else cumulative
@@ -93,7 +93,8 @@ class Explanation:
             ax.add_patch(rect)
             plt.errorbar(x=left, y=position, yerr=0.5, color="black")
             plt.errorbar(x=left+width, y=position, yerr=0.5, color="black")
-            plt.text(left+width+0.1,y=position-0.2,s=str(round(attr_info.contribution,2)),size=16)
+            plt.text(left+width+0.15, y=position-0.2, size=fontsize,
+                     s = self._get_prefix(attr_info.contribution) + str(round(attr_info.contribution,2)))
             previous_value = cumulative
         
         #add final prediction bar
@@ -107,21 +108,28 @@ class Explanation:
         plt.errorbar(x=self._baseline, y=len(positions)-1, yerr=0.5, color="black")
         plt.errorbar(x=self._baseline+self._final_prediction, y=len(positions)-1, yerr=0.5, color="black")
         plt.text(
-            x=self._baseline+self._final_prediction+0.1,
+            x=self._baseline+self._final_prediction+0.15,
             y=positions[len(positions)-1]-0.2,
-            s=str(round(self._final_prediction,2)),size=16)
+            s=str(round(self._final_prediction+self._baseline,2)),size=fontsize,weight="bold")
 
-        ax.set_yticks(positions)
-        ax.grid(color="gray",alpha=0.3)
+        ax.set_yticks(positions[1:])
+        ax.grid(color="gray",alpha=0.5)
         labels=["=".join([attr.name,str(attr.value)]) for attr in self._attributes]+["Final Prognosis"]
-        ax.set_yticklabels(labels,size=16)
+        ax.set_yticklabels(labels,size=fontsize)
         
         all_cumulative = [attr.cumulative for attr in self._attributes]
         leftbound = min([min(all_cumulative), 0]) + self._baseline
-        rightbound= max(all_cumulative) + self._baseline
-        ax.set_xlim(leftbound-1, rightbound+3)
-        ax.set_ylim(-1,len(self._attributes)+1)
+        rightbound= max(max(all_cumulative)+self._baseline,self._baseline)
+        plt.text(x=self._baseline+0.15, y=positions[0]-0.2, s="Baseline = "+str(round(self._baseline,2)),
+                size=fontsize,color="red")
 
+        ax.set_xlim(leftbound-1, rightbound+1)
+        ax.set_ylim(-1,len(self._attributes)+2)
+        ax.spines['right'].set_visible(False)
+        ax.spines['top'].set_visible(False)
+
+        #fig.tight_layout(pad=0, w_pad=0, h_pad=0.0)
+        #fig.subplots_adjust(hspace=0, wspace=0.1)
         if filename is None:
             plt.show()
         else:
@@ -149,3 +157,6 @@ class Explanation:
         for attribute in self._attributes:
             csum+=attribute.contribution
             attribute.cumulative = csum
+
+    def _get_prefix(self, val):
+        return "+" if val>=0 else ""
