@@ -11,4 +11,4 @@ pyBreakDown
 
    usermanual
    pybreakdown
-   comparisons
+   comparison
