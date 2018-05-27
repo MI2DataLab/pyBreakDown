@@ -1,5 +1,5 @@
-Performance comparison between breakDown and pyBreakDown
-========================================================
+Performance
+===========
 
 This document summarizes performance of R package breakDown and python package breakDown on the same data.
 

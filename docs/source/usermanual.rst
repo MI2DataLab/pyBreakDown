@@ -1,5 +1,5 @@
-pyBreakDown usage
-=================
+Usage
+=====
 
 Requirements
 ------------
