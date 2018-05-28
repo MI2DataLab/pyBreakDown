@@ -16,6 +16,8 @@ Install directly from github
 ```
     git clone https://github.com/bondyra/pyBreakDown
     cd ./pyBreakDown
+    ## (activate virtual environment if needed) ##
+    pip install -r requirements.txt
     python3 setup.py install
 ```
 
