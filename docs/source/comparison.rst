@@ -10,7 +10,7 @@ R breakDown test code
 
 Following commands were executed:
 
-.. code:: ipython3
+.. code:: python
 
     library(breakDown) 
     library(rpart)
@@ -21,11 +21,11 @@ Following commands were executed:
 
 **Following commands were executed:**
 
-.. code:: ipython3
+.. code:: python
 
     microbenchmark(breakDown::broken(model,MASS::Boston[400,],train_data,direction="up",baseline="Intercept"),times=100)
 
-.. code:: ipython3
+.. code:: python
 
     r_results_up = [
       151496945, 179019040, 174285649, 171657389, 186736577, 176873811, 149477996, 156078363, 153822111, 157110590, 164812549, 149597564, 161371930, 150536604, 159660424,
@@ -36,17 +36,17 @@ Following commands were executed:
       207497217, 217937407, 268007391, 238880808, 200768319, 298817194, 187716953, 332831036, 288971446, 310214308, 279432796, 314266951, 240378471, 275743596, 269309196,
       222933544, 147644030, 236694466, 237237474, 166425943, 176675193, 162013906, 176361342, 171035583, 156164433]
 
-.. code:: ipython3
+.. code:: python
 
     r_results_up_s = list(map((lambda x:x/1000000000.0), r_results_up)) #nanoseconds to seconds (float)
 
 **Results for following command**
 
-.. code:: ipython3
+.. code:: python
 
     microbenchmark(breakDown::broken(model,MASS::Boston[400,],train_data,direction="down",baseline="Intercept"),times=100)
 
-.. code:: ipython3
+.. code:: python
 
     r_results_down = [
       157636586, 176977826, 152566930, 176370770, 180238813, 173332343, 155944278, 169256885, 154035595, 182050786, 163405722, 161102422, 150142820, 153812325, 167083885,
@@ -58,7 +58,7 @@ Following commands were executed:
       200776265, 143306303, 174211859, 143917859, 152706348, 160942923, 169771885, 148698114, 148858718, 189644579
     ]
 
-.. code:: ipython3
+.. code:: python
 
     r_results_down_s = list(map((lambda x:x/1000000000.0), r_results_down)) #nanoseconds to seconds (float)
 
@@ -67,7 +67,7 @@ Python pyBreakDown test code
 
 Following code was executed:
 
-.. code:: ipython3
+.. code:: python
 
     import timeit
     setup="""from pyBreakDown import explainer
@@ -81,17 +81,17 @@ Following code was executed:
 
 **Similar commands for up and down method**
 
-.. code:: ipython3
+.. code:: python
 
     t = timeit.Timer(stmt='exp.explain(observation=boston.data[399,:],direction=\"up", useIntercept=True)', setup=setup)
     p_results_up = t.repeat(number=1,repeat=100)
 
-.. code:: ipython3
+.. code:: python
 
     t = timeit.Timer(stmt='exp.explain(observation=boston.data[399,:],direction=\"down", useIntercept=True)', setup=setup)
     p_results_down = t.repeat(number=1,repeat=100)
 
-.. code:: ipython3
+.. code:: python
 
     import numpy as np
     def describe (arr):
@@ -105,7 +105,7 @@ Following code was executed:
 Basic statistics for breakDown
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: ipython3
+.. code:: python
 
     describe(r_results_down_s)
 
@@ -120,7 +120,7 @@ Basic statistics for breakDown
     Max       0.364408941
 
 
-.. code:: ipython3
+.. code:: python
 
     describe(r_results_up_s)
 
@@ -138,7 +138,7 @@ Basic statistics for breakDown
 Basic statitics for pyBreakDown
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: ipython3
+.. code:: python
 
     describe(p_results_down)
 
@@ -153,7 +153,7 @@ Basic statitics for pyBreakDown
     Max       0.015690394000557717
 
 
-.. code:: ipython3
+.. code:: python
 
     describe(p_results_up)
 
