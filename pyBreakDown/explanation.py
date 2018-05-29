@@ -1,10 +1,15 @@
 import numpy as np
 from collections import deque
+from enum import Enum
 from recordclass import recordclass
 import matplotlib.patches as patches
 from matplotlib import pyplot as plt
 
 AttrInfo = recordclass("AttrInfo",["name","value","contribution","cumulative"])
+
+class ExplainerDirection (Enum):
+    Up=1
+    Down=2
 
 class Explanation:
     """
@@ -13,7 +18,8 @@ class Explanation:
     _INTERCEPT_NAME = "Intercept"
     _INTERCEPT_VALUE = 1
 
-    def __init__ (self, variable_names, variable_values, contributions):
+    def __init__ (self, variable_names, variable_values, contributions, direction):
+        self._direction = direction
         self._attributes = deque()
         csum = 0
         for (name, value, contribution) in zip(variable_names, variable_values, contributions):
@@ -114,7 +120,8 @@ class Explanation:
 
         ax.set_yticks(positions[1:])
         ax.grid(color="gray",alpha=0.5)
-        labels=["=".join([attr.name,str(attr.value)]) for attr in self._attributes]+["Final Prognosis"]
+        sign = "+" if self._direction==ExplainerDirection.Up else "-"
+        labels=[sign + "=".join([attr.name,str(attr.value)]) for attr in self._attributes]+["Final Prognosis"]
         ax.set_yticklabels(labels,size=fontsize)
         
         all_cumulative = [attr.cumulative for attr in self._attributes]
@@ -127,6 +134,8 @@ class Explanation:
         ax.set_ylim(-1,len(self._attributes)+2)
         ax.spines['right'].set_visible(False)
         ax.spines['top'].set_visible(False)
+        approach = "\"up\"" if self._direction==ExplainerDirection.Up else "\"down\""
+        plt.title("Prediction explanation for "+approach+" approach")
 
         #fig.tight_layout(pad=0, w_pad=0, h_pad=0.0)
         #fig.subplots_adjust(hspace=0, wspace=0.1)

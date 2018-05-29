@@ -108,7 +108,7 @@ class Explainer:
         means = self._get_means_from_yhats(important_yhats)
         means.appendleft(baseline_yhat)
         contributions = np.diff(means)
-        return e.Explanation(var_names, var_values, contributions)
+        return e.Explanation(var_names, var_values, contributions, e.ExplainerDirection.Up)
 
     def _explain_down (self, observation, baseline, data):
         new_data = self._get_initial_dataset(observation, data)
@@ -143,7 +143,7 @@ class Explainer:
         means.reverse()
         contributions = np.diff(means)
         
-        return e.Explanation(var_names, var_values, contributions)
+        return e.Explanation(var_names, var_values, contributions, e.ExplainerDirection.Down)
 
     def _get_means_from_yhats (self, important_yhats):
         return deque([np.array(v).mean() for k,v in important_yhats.items()])
