@@ -2,6 +2,9 @@
 
 # pyBreakDown
 
+**Please note that the Break Down method is moved to the [dalex](http://dalex.drwhy.ai/) Python package which is actively maintained. If you will experience any problem with pyBreakDown please consider the [dalex](http://dalex.drwhy.ai/) implementation at https://dalex.drwhy.ai/python/api/.**
+
+
 Python implementation of breakDown package (https://github.com/pbiecek/breakDown).
 
 Docs: https://pybreakdown.readthedocs.io.
