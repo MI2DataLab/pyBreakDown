@@ -9,7 +9,7 @@ setup(name='pyBreakDown',
       license='GPL-2',
       packages= find_packages(exclude=['tests']),
       install_requires=[
-	'numpy==1.14.2',
+	'numpy==1.22.0',
 	'scikit-learn==0.19.1',
 	'scipy==1.0.0',
 	'blist==1.3.6',
